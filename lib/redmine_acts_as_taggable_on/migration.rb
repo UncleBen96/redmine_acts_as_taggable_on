@@ -15,7 +15,7 @@ class RedmineActsAsTaggableOn::Migration < ActsAsTaggableOnMigration
     if ok_to_go_up?
       super
     else
-      say 'Not creating "tags" and "taggings" because they already exist'
+      say 'Not creating "aa_tags" and "aa_taggings" because they already exist'
     end
   end
 
@@ -25,7 +25,7 @@ class RedmineActsAsTaggableOn::Migration < ActsAsTaggableOnMigration
     if ok_to_go_down?
       super
     else
-      say 'Not dropping "tags" and "taggings" because they\'re still needed by'
+      say 'Not dropping "aa_tags" and "aa_taggings" because they\'re still needed by'
       say 'the following plugins:'
       plugins_still_using_tables.each { |p| say p.id, true }
     end
@@ -57,7 +57,7 @@ class RedmineActsAsTaggableOn::Migration < ActsAsTaggableOnMigration
   end
 
   def ok_to_go_up?
-    tables_already_exist = %w(tags taggings).any? do |table|
+    tables_already_exist = %w(aa_tags aa_taggings).any? do |table|
       ActiveRecord::Base.connection.table_exists? table
     end
     if tables_already_exist
@@ -68,9 +68,9 @@ class RedmineActsAsTaggableOn::Migration < ActsAsTaggableOnMigration
   end
 
   def assert_schema_match!
-    if (obtain_structure('tags') != expected_tags_structure) ||
-       (obtain_structure('taggings') != expected_taggings_structure)
-      msg = "A plugin is already using the \"tags\" or \"taggings\" tables, and\n"
+    if (obtain_structure('aa_tags') != expected_tags_structure) ||
+       (obtain_structure('aa_taggings') != expected_taggings_structure)
+      msg = "A plugin is already using the \"aa_tags\" or \"aa_taggings\" tables, and\n"
       msg << "the structure of the table does not match the structure expected\n"
       msg << "by #{current_plugin.id}.\n"
       raise SchemaMismatchError, msg
